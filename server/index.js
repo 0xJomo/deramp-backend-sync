@@ -1,21 +1,28 @@
-{
-  "name": "deramp-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node -r dotenv/config server/index.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@google-cloud/storage": "^6.6.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "firebase-functions": "^4.0.1",
-    "firebase-admin": "^11.2.0",
-    "uuid4": "^2.0.3"
-  }
-}
+const Web3 = require('web3');
+
+const alchemyApiKey = 'JeaTE8pmAJlQNMhBoGIN7stJlH3vwguZ';
+const web3 = new Web3(`https://eth-mainnet.g.alchemy.com/v2/JeaTE8pmAJlQNMhBoGIN7stJlH3vwguZ`);
+
+// Your contract ABI and address
+const contractAbi = [...];  // Replace with your contract ABI
+const contractAddress = '0x...';  // Replace with your contract address
+
+const contract = new web3.eth.Contract(contractAbi, contractAddress);
+
+// Connect to Alchemy
+web3.eth.net.isListening()
+  .then(() => console.log('Connected to Alchemy'))
+  .catch(err => console.error('Error connecting to Alchemy:', err));
+
+
+// Subscribe to a specific event
+const event = contract.events.YourEventName();
+
+event
+  .on('data', event => {
+    console.log('Event:', event);
+    // Handle the event data here
+  })
+  .on('error', error => {
+    console.error('Error:', error);
+  });
