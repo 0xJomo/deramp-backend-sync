@@ -1,28 +1,44 @@
-const Web3 = require('web3');
-
-const alchemyApiKey = 'JeaTE8pmAJlQNMhBoGIN7stJlH3vwguZ';
-const web3 = new Web3(`https://eth-mainnet.g.alchemy.com/v2/JeaTE8pmAJlQNMhBoGIN7stJlH3vwguZ`);
-
-// Your contract ABI and address
-const contractAbi = [...];  // Replace with your contract ABI
-const contractAddress = '0x...';  // Replace with your contract address
-
-const contract = new web3.eth.Contract(contractAbi, contractAddress);
-
-// Connect to Alchemy
-web3.eth.net.isListening()
-  .then(() => console.log('Connected to Alchemy'))
-  .catch(err => console.error('Error connecting to Alchemy:', err));
+const ethers = require("ethers");
+const { BigNumber } = require('bignumber.js');
+const derampAbi = require('./abi.js'); // Adjust the path based on your project structure
 
 
-// Subscribe to a specific event
-const event = contract.events.YourEventName();
+// Replace 'YourContractAbi' and 'YourContractAddress' with your actual contract ABI and address
+const contractAbi = derampAbi; // Your contract ABI
+const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'; // Local Address
 
-event
-  .on('data', event => {
-    console.log('Event:', event);
-    // Handle the event data here
-  })
-  .on('error', error => {
-    console.error('Error:', error);
-  });
+// Connect to a provider (Ethereum node)
+const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+
+// Create a contract instance
+const contract = new ethers.Contract(contractAddress, contractAbi, provider);
+
+// Specify the event you want to listen to
+const eventName = 'OffRamp'; // RYour actual event name
+
+// Set up the event filter
+const eventFilter = contract.filters[eventName]();
+
+// Listen to the events
+provider.on(eventFilter, (log, event) => {
+  console.log('Event:', event);
+  console.log('Log:', log);
+
+  // Parse the event data using the contract ABI
+  const parsedData = contract.interface.parseLog(log);
+
+  // Access the parsed data fields
+  const eventData = parsedData.args;
+  console.log('Parsed Event Data:', eventData);
+
+  // Parse data
+  const paymentId = eventData[0];
+  const paymentPlatform = eventData[1];  
+  const depositAmount = parseInt(eventData[2].toString(), 10);
+  const receiverAddress = eventData[3]
+
+  console.log('PaymentId:', paymentId);
+  console.log('PaymentPlatform:', paymentPlatform)
+  console.log('DepositAmount:', depositAmount)
+  console.log("ReceiverAddress:", receiverAddress)
+});
