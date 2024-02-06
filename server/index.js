@@ -1,6 +1,8 @@
 const ethers = require("ethers");
 const { BigNumber } = require('bignumber.js');
-const derampAbi = require('./abi.js'); // Adjust the path based on your project structure
+const derampAbi = require('./abi.js'); 
+const { createSellOrderController } = require('./firestore')
+
 
 
 // Replace 'YourContractAbi' and 'YourContractAddress' with your actual contract ABI and address
@@ -20,16 +22,12 @@ const eventName = 'OffRamp'; // RYour actual event name
 const eventFilter = contract.filters[eventName]();
 
 // Listen to the events
-provider.on(eventFilter, (log, event) => {
-  console.log('Event:', event);
-  console.log('Log:', log);
-
+provider.on(eventFilter, async (log, event) => {
   // Parse the event data using the contract ABI
   const parsedData = contract.interface.parseLog(log);
 
   // Access the parsed data fields
   const eventData = parsedData.args;
-  console.log('Parsed Event Data:', eventData);
 
   // Parse data
   const paymentId = eventData[0];
@@ -41,4 +39,6 @@ provider.on(eventFilter, (log, event) => {
   console.log('PaymentPlatform:', paymentPlatform)
   console.log('DepositAmount:', depositAmount)
   console.log("ReceiverAddress:", receiverAddress)
+
+  await createSellOrderController(paymentId, paymentPlatform, depositAmount, receiverAddress)
 });

@@ -1243,6 +1243,19 @@ const derampAbi = [
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "uasset",
+      "outputs": [
+        {
+          "internalType": "contract ERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
