@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r dotenv/config server/index.js"
   },
+  "engines": {
+    "node": "12"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
