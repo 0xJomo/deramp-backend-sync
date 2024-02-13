@@ -1,6 +1,6 @@
 const ethers = require("ethers");
 const { BigNumber } = require('bignumber.js');
-const derampAbi = require('./abi.js'); 
+const derampAbi = require('./abi.js');
 const { createSellOrderController } = require('./firestore')
 
 
@@ -10,7 +10,7 @@ const contractAbi = derampAbi; // Your contract ABI
 const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'; // Local Address
 
 // Connect to a provider (Ethereum node)
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+const provider = new ethers.providers.JsonRpcProvider("https://jomonode.ngrok.dev");
 
 // Create a contract instance
 const contract = new ethers.Contract(contractAddress, contractAbi, provider);
@@ -20,6 +20,8 @@ const eventName = 'OffRamp'; // RYour actual event name
 
 // Set up the event filter
 const eventFilter = contract.filters[eventName]();
+
+console.log("start")
 
 // Listen to the events
 provider.on(eventFilter, async (log, event) => {
@@ -31,7 +33,7 @@ provider.on(eventFilter, async (log, event) => {
 
   // Parse data
   const paymentId = eventData[0];
-  const paymentPlatform = eventData[1];  
+  const paymentPlatform = eventData[1];
   const depositAmount = parseInt(eventData[2].toString(), 10);
   const receiverAddress = eventData[3]
 
