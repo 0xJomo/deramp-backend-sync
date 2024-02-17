@@ -12,7 +12,7 @@ const db = getFirestore();
 const uuid = require('uuid4');
 
 
-async function createSellOrderController(payment_id, payment_platform, amount, receiver_address) {
+async function createSellOrderController(payment_id, payment_platform, amount, receiver_address, chainName) {
   const sellOrdersRef = db.collection('sell_orders')
   const sell_order_id = uuid(4).toString();
 
@@ -22,7 +22,8 @@ async function createSellOrderController(payment_id, payment_platform, amount, r
     payment_platform: payment_platform,
     amount: amount,
     receiver_address: receiver_address,
-    balance: amount
+    balance: amount,
+    chain: chainName,
   }
   await sellOrdersRef.doc(sell_order_id).set(sell_order);
   return sell_order_id;

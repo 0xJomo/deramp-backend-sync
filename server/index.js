@@ -7,10 +7,10 @@ const { createSellOrderController } = require('./firestore')
 
 // Replace 'YourContractAbi' and 'YourContractAddress' with your actual contract ABI and address
 const contractAbi = derampAbi; // Your contract ABI
-const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'; // Local Address
+const contractAddress = '0x8AA103410431D508bd64a74BcDcC1369473Ad377'; // Local Address
 
 // Connect to a provider (Ethereum node)
-const provider = new ethers.providers.JsonRpcProvider("https://jomonode.ngrok.dev");
+const provider = new ethers.providers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/v178sXJ0X49qRdgINzyuNbEvKsMXob4W");
 
 // Create a contract instance
 const contract = new ethers.Contract(contractAddress, contractAbi, provider);
@@ -36,11 +36,12 @@ provider.on(eventFilter, async (log, event) => {
   const paymentPlatform = eventData[1];
   const depositAmount = parseInt(eventData[2].toString(), 10);
   const receiverAddress = eventData[3]
+  const chainName = "Blast"
 
   console.log('PaymentId:', paymentId);
   console.log('PaymentPlatform:', paymentPlatform)
   console.log('DepositAmount:', depositAmount)
   console.log("ReceiverAddress:", receiverAddress)
 
-  await createSellOrderController(paymentId, paymentPlatform, depositAmount, receiverAddress)
+  await createSellOrderController(paymentId, paymentPlatform, depositAmount, receiverAddress, chainName)
 });
